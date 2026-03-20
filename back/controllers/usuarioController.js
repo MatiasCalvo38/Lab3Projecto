@@ -20,4 +20,16 @@ export class usuarioController{
 
         res.json(nuevoUsuario);
     }
+
+    login = async(req,res) => {
+        const datosAuth = req.body
+
+        const usuario = await this.modelo.login(datosAuth);
+
+        if(usuario){
+            res.json(usuario);
+        }else{
+            res.status(400).end();
+        }
+    }
 }

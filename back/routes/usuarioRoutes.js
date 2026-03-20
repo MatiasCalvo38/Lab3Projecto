@@ -6,8 +6,9 @@ export const creadorUsuarios = (modelo) => {
 
     const usuarioRouter = Router();
 
-    usuarioRouter.get("/",controlador.getAll);
+    //usuarioRouter.get("/",controlador.getAll);
     usuarioRouter.post("/",controlador.register);
+    usuarioRouter.post('/login',controlador.login);
 
     return usuarioRouter;
 }

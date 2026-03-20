@@ -7,7 +7,7 @@ const usuariosSchema = zod.object(
         id:zod.number(),
         nombre:zod.string().min(1),
         password:zod.string(1),
-        rol:zod.string()
+        mail:zod.string()
     }
 );
 
