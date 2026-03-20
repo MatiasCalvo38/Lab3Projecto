@@ -5,7 +5,8 @@ import zod from "zod";
 const usuariosSchema = zod.object(
     {
         id:zod.number(),
-        nombre:zod.string(),
+        nombre:zod.string().min(1),
+        password:zod.string(1),
         rol:zod.string()
     }
 );

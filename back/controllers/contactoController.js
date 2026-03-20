@@ -1,16 +1,18 @@
-import { Contacto } from "../models/contactos.js";
 import { validarContacto, validarParcial } from "../helpers/zod.js";
-import { response } from "express";
-import { number } from "zod";
 
 export class ContactoController{
-    static async getAll(req, res){
-        res.json(await Contacto.getAll());
+
+    constructor(modelo){
+        this.modelo = modelo;
     }
 
-    static async getById(req, res){
+    getAll = async(req, res) => {
+        res.json(await this.modelo.getAll());
+    }
+
+    getById = async(req, res) => {
         const id = parseInt(req.params.id);
-        const contacto = await Contacto.getById(id);
+        const contacto = await this.modelo.getById(id);
 
         if(contacto){
             res.json(contacto);
@@ -19,9 +21,9 @@ export class ContactoController{
         }
     }
 
-    static async delete(req, res){
+    delete = async(req, res) => {
         const id = parseInt(req.params.id);
-        const listaContactos = await Contacto.delete(id);
+        const listaContactos = await this.modelo.delete(id);
 
         if(listaContactos){
             res.json(listaContactos);
@@ -30,22 +32,22 @@ export class ContactoController{
         }
     }
 
-    static async create(req, res){
+    create = async(req, res) => {
         const contacto = validarContacto(req.body);
 
         if(contacto.error){
             res.status(400).json('Validacion Incorrecta');
         }
 
-        const nuevoContacto = await Contacto.create(contacto);
+        const nuevoContacto = await this.modelo.create(contacto);
         res.json(nuevoContacto);
     }
 
-    static async update(req, res){
+    update = async(req, res) => {
         const id = Number(req.params.id);
         const contactoValido = validarParcial(req.body);
 
-        const nuevoContacto = await Contacto.update(id,contactoValido);
+        const nuevoContacto = await this.modelo.update(id,contactoValido);
         res.json(nuevoContacto);
     }
 }
