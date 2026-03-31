@@ -8,7 +8,7 @@ const contactosSchema = zod.object(
         nombre:zod.string(),
         apellido:zod.string(),
         email:zod.string(),
-        empresa:zod.string(),
+        empresa:zod.string().optional(),
         domicilio:zod.string().optional(),
         telefono:zod.string().optional()
     }

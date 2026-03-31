@@ -1,9 +1,13 @@
 import express from 'express';
 
 import { Enrutador } from './routes/contactoRoutes.js';
-import { Contacto } from './models/contacto.js';
 
-import { Usuario } from './models/usuario.js';
+import { ContactoModel } from "./models/Contacto_MDB.js"
+import { UsuarioModel } from './models/Usuario_MDB.js';
+
+//import { Contacto } from './models/contacto.js';
+//import { Usuario } from './models/usuario.js';
+
 import { creadorUsuarios } from './routes/usuarioRoutes.js';
 
 import { auth } from './middlewares/auth.js';
@@ -14,8 +18,8 @@ app.use(express.json());
 
 const PORT = 1234;
 
-app.use("/contactos",auth,Enrutador(Contacto));
-app.use("/usuarios",creadorUsuarios(Usuario));
+app.use("/contactos",auth,Enrutador(ContactoModel));
+app.use("/usuarios",creadorUsuarios(UsuarioModel));
 
 // ---------- Puerto ----------
 

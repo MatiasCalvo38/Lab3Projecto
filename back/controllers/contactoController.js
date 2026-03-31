@@ -11,8 +11,8 @@ export class ContactoController{
     }
 
     getById = async(req, res) => {
-        const id = parseInt(req.params.id);
-        const contacto = await this.modelo.getById(id);
+        const id = req.params.id;
+        const contacto = await this.modelo.getOneById(id);
 
         if(contacto){
             res.json(contacto);
@@ -22,7 +22,7 @@ export class ContactoController{
     }
 
     delete = async(req, res) => {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
         const listaContactos = await this.modelo.delete(id);
 
         if(listaContactos){
@@ -44,7 +44,7 @@ export class ContactoController{
     }
 
     update = async(req, res) => {
-        const id = Number(req.params.id);
+        const id = req.params.id;
         const contactoValido = validarParcial(req.body);
 
         const nuevoContacto = await this.modelo.update(id,contactoValido);
