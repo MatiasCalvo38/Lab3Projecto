@@ -1,22 +1,22 @@
-import React from 'react'
 import { AuthContext } from './ProveedorContexto.jsx'
-import { Login } from './login.jsx'
+import { Login } from './Login.jsx'
 import { useContext,useEffect,useState } from 'react'
 
 export const ResultadoContacto = () => {
 
-    const [usuarioAuth,setUsuarioAuth] = useContext(AuthContext)
-    const [contactosState,setContactosState] = useState([])
-    const [exito,setExito] = useState(false)
+    const [usuarioAuth]=useContext(AuthContext)
+    const [contactosState,setContactosState]=useState([])
+    const [exito,setExito]=useState(false)
+    const [error,setError]=useState(null)
+    const [cargando,setCargando]=useState(true)
 
-    useEffect(async () => {
+    useEffect(() => {
         resultados()
+    }, [])
 
-    },[])
-
-    const resultados = async () => {
+    const resultados=async()=>{
         try {
-            const peticion = await fetch('http://LocalHost:1234/contactos',
+            const peticion=await fetch('http://localhost:1234/contactos',
                 {
                     method:'GET',
                     headers:{
@@ -26,29 +26,46 @@ export const ResultadoContacto = () => {
                 }
             )
 
-            const datos = await peticion.json()
+            const datos=await peticion.json()
 
-            if(peticion.status == 404){
-                setExito(false)
-            }else{
-                setExito(true)
-                setContactosState(datos)
+            setContactosState(datos)
+            setCargando(false)
+
+            if(!peticion.ok)
+            {
+                setError("Error al cargar los contactos")
+                setCargando(false)
+                return
             }
+           
         } catch (e) {
             console.log(e)
+            setError("Error de conexion con el servidor")//Si hay un error, reseteamos el formulario
+            setCargando(false)
         }
     }
 
+    if(cargando){
+        return <p>Cargando contactos...</p>
+    }
+    if(error){
+        return <p style={{color:'red'}}>{error}</p>
+    }
+
+
+
+
   return (
     <>
+    <h2>Contactos</h2>
         <ul>
-            {
-                exito ? contactosState.map((contacto) => {
-                    return <li key={contacto._id}>{contacto.nombre}
-                    {contacto.apellido}</li>
-                }) : <Login />
-            }
+        
+        {contactosState.map((contacto)=>(
+            <li key={contacto._id}>{contacto.nombre} {contacto.apellido} - {contacto.email}</li>
+        ))}
+          
         </ul>
+    
     </>
   )
 }

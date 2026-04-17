@@ -1,56 +1,70 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useContext } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
+import { AuthContext } from "./ProveedorContexto.jsx";
 
 export const Login = () => {
+  const [formulario, setFormulario] = useState({});
+  const [exito, setExito] = useState(false);
+  const [usuarioAuth, setUsuarioAuth] = useContext(AuthContext);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const [formulario,setFormulario] = useState({})
-    const [exito,setExito] = useState(false)
+  const recogerForm = (e) => {
+    e.preventDefault();
 
-    const recogerForm = (e) => {
-        e.preventDefault()
+    const usuario = {
+      nick: e.target.usuario.value,
+      password: e.target.password.value,
+    };
+    setFormulario(usuario);
+    buscar(usuario);
+  };
 
-        let usuario = {
-            nombre:e.target.usuario.value,
-            password:e.target.passwordvalue,
-        }
+  const buscar = async (usuario) => {
+    try {
+      const peticion = await fetch("http://localhost:1234/usuarios/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(usuario),
+      });
+      
 
-        setFormulario(usuario)
-        buscar(usuario)
+      if(!peticion.ok){
+        setError("Usuario o contraseña incorrectos");
+        return;
+      }
+
+      const data=await peticion.json();
+      localStorage.setItem("usuario", JSON.stringify(data));
+        setUsuarioAuth(data);
+        navigate("/contactos");
+
+
+    } catch (e) {
+      console.log(e);
+      setFormulario("Error de conexion con el servidor"); //Si hay un error, reseteamos el formulario
     }
-
-    const buscar = async(usuario) => {
-        try {
-            const peticion = await fetch('http://localhost:1234/usuarios/login',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(usuario)
-            })
-
-            const data = await peticion.json()
-
-            if(data.status == 400){
-                setExito(false)
-            }else{
-                setExito(true)
-                localStorage.setItem('usuario',JSON.stringify(data.usuario))
-            }
-        } catch (e) {
-            console.log(e)
-            setFormulario({}) // Si hay un error, reseteamos el formulario
-        }
-    }
+  };
 
   return (
     <>
-        <form onSubmit={recogerForm}>
-            <label htmlFor="usuario">Usuario:</label>
-            <input type="text" id='usuario' name='usuario' placeholder='Usuario'/>
-            <label htmlFor="password">Password</label>
-            <input type="text" name='password' id='password' placeholder='Password'/>
-            <input type="submit" />
-        </form>
+       <h2>Iniciar Sesion</h2>
+      <form onSubmit={recogerForm}>
+        <label htmlFor="usuario">Usuario:</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Usuario" />
+        <label htmlFor="password">Password:</label>
+        <input
+          type="text"
+          name="password"
+          id="password"
+          placeholder="Password"
+        />
+        <input type="submit" value="Ingresar"/>
+      </form>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <NavLink to="/registro">No tenes cuenta? Registrate aquí</NavLink>
     </>
-  )
-}
+  );
+};

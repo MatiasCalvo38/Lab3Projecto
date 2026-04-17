@@ -1,4 +1,4 @@
-import { React,createContext,useState,useEffect } from 'react'
+import { createContext,useState,useEffect } from 'react'
 
 export const AuthContext = createContext()
 
@@ -6,14 +6,13 @@ export const ProveedorContexto = (props) => {
 
     const [usuarioAuth,setUsuarioAuth] = useState(null)
 
-    useEffect(async () => {
+    useEffect( () => {
         const usuario = localStorage.getItem('usuario')
 
         if(!usuario){
-            return false
+            return setUsuarioAuth(JSON.parse(usuario))
         }
-
-        setUsuarioAuth(JSON.parse(usuario))
+        
     },[])
     
   return (
