@@ -13,7 +13,7 @@ export const Login = () => {
     e.preventDefault();
 
     const usuario = {
-      nick: e.target.usuario.value,
+      nombre: e.target.usuario.value,
       password: e.target.password.value,
     };
     setFormulario(usuario);

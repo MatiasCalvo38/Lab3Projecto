@@ -26,10 +26,10 @@ export class usuarioController{
 
         const usuario = await this.modelo.login(datosAuth);
 
-        if(usuario){
+        if(usuario && typeof usuario === 'object'){
             res.json(usuario);
         }else{
-            res.status(400).end();
+            res.status(401).json({ error: usuario || "Error de autentificacion" });
         }
     }
 }

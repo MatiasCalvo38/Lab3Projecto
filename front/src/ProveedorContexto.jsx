@@ -9,10 +9,10 @@ export const ProveedorContexto = (props) => {
     useEffect( () => {
         const usuario = localStorage.getItem('usuario')
 
-        if(!usuario){
-            return setUsuarioAuth(JSON.parse(usuario))
+        if(usuario){
+            setUsuarioAuth(JSON.parse(usuario))
         }
-        
+
     },[])
     
   return (
