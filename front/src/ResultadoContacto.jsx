@@ -1,17 +1,15 @@
 import { AuthContext } from './ProveedorContexto.jsx'
 import { useContext,useEffect,useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 export const ResultadoContacto = () => {
 
-    const [usuarioAuth]=useContext(AuthContext)
-    const [contactosState,setContactosState]=useState([])
+    const [usuarioAuth, setUsuarioAuth] = useContext(AuthContext)
+    const [contactosState,setContactosState] = useState([])
+    const [exito,setExito] = useState(false)
     const [error,setError]=useState(null)
     const [cargando,setCargando]=useState(true)
-    const navigate = useNavigate()
 
-    useEffect(() => {
-    // Si no hay usuarioAuth todavía, no hacemos nada (esperamos a que el Contexto cargue)
+    useEffect(() => { // Si no hay usuarioAuth todavía, no hacemos nada (esperamos a que el Contexto cargue)
         if (usuarioAuth && usuarioAuth.token) {
             resultados();
         }
@@ -56,31 +54,68 @@ export const ResultadoContacto = () => {
            
         } catch (e) {
             console.error("Error capturado en el catch:", e); // <--- Cambia log por error para verlo mejor
-            setError("Error de conexion con el servidor")//Si hay un error, reseteamos el formulario
+            setError("Error de conexion con el servidor") // Si hay un error, reseteamos el formulario
             setCargando(false)
         }
     }
 
-    if(cargando){
-        return <p>Cargando contactos...</p>
-    }
-    if(error){
-        return <p style={{color:'red'}}>{error}</p>
-    }
-
-
-
+    /*const cerrarSesion = () => {
+        localStorage.removeItem("usuario");
+        setUsuarioAuth(null);
+        navigate("/login");
+    }*/
 
   return (
     <>
-    <h2>Contactos</h2>
-        <ul>
-        
-        {contactosState.map((contacto)=>(
-            <li key={contacto._id}>{contacto.nombre} {contacto.apellido} - {contacto.email}</li>
-        ))}
-          
-        </ul>
+        <div className="container mt-4">
+            {cargando && (
+                <div className="d-flex justify-content-center mt-5">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            )}
+
+                {error && <div className="alert alert-danger">{error}</div>}
+
+                {!cargando && !error && (
+                    <>
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h5 className="mb-0">Contactos</h5>
+                            <span className="badge bg-secondary">{contactosState.length} contactos</span>
+                        </div>
+
+                        {contactosState.length === 0 ? (
+                            <div className="alert alert-info">No hay contactos para mostrar.</div>
+                        ) : (
+                            <div className="table-responsive">
+                                <table className="table table-striped table-hover align-middle">
+                                    <thead className="table-primary">
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Apellido</th>
+                                            <th>Email</th>
+                                            <th>Empresa</th>
+                                            <th>Teléfonos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {contactosState.map((contacto) => (
+                                            <tr key={contacto._id}>
+                                                <td>{contacto.nombre}</td>
+                                                <td>{contacto.apellido}</td>
+                                                <td>{contacto.email}</td>
+                                                <td>{contacto.empresa || '-'}</td>
+                                                <td>{contacto.telefonos?.join(', ') || '-'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </>
+                )}
+        </div>
     
     </>
   )

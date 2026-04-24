@@ -3,11 +3,18 @@ import { conexion } from "../helpers/conexion.js";
 
 conexion();
 
-const ContactoSchema = new Schema(
+const ContactoSchema = new Schema( // Esquema de contacto
     {
         nombre: String,
         apellido: String,
         email: String,
+        empresa: String,
+        domicilio: String,
+        telefonos: [String],
+        propietario: {type: Schema.Types.ObjectId, ref: "Usuario"},
+        esPublico: {type: Boolean, default: false},
+        esVisible: {type: Boolean, default: true},
+        password: String
     },
     {
         versionKey: false,

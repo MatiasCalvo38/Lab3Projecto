@@ -5,11 +5,12 @@ import { crearToken } from "../helpers/jwt_usuarios.js";
 
 conexion();
 
-const usuarioSchema = new Schema(
+const usuarioSchema = new Schema( // Esquema de usuario
     {
         nombre:String,
         password:String,
-        mail:String
+        mail:String,
+        rol: {type: String, enum:["admin","usuario"], default:"usuario"}
     },
     {
         versionKey:false
