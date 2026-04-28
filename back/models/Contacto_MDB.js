@@ -60,6 +60,7 @@ export class ContactoModel {
         try {
             await contactoGuardar.save();
             return nuevoContacto;
+            //return contactoGuardar.toObject();
         } catch (e) {
             console.log(e);
         }

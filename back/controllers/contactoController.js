@@ -35,7 +35,7 @@ export class ContactoController{
     create = async(req, res) => {
         const contacto = validarContacto(req.body);
 
-        if(contacto.error){
+        if(!contacto.success){
             res.status(400).json('Validacion Incorrecta');
         }
 

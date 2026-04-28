@@ -4,7 +4,7 @@ import zod from "zod";
 
 const contactosSchema = zod.object( // Esquema de contacto
     {
-        id: zod.number(),
+        id: zod.number().optional(),
         nombre: zod.string(),
         apellido: zod.string(),
         email: zod.string(),

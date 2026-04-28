@@ -20,8 +20,8 @@ app.use(cors());
 
 const PORT = 1234;
 
-app.use("/contactos",auth,Enrutador(ContactoModel));
-app.use("/usuarios",creadorUsuarios(UsuarioModel));
+app.use("/contactos", auth, Enrutador(ContactoModel));
+app.use("/usuarios", creadorUsuarios(UsuarioModel));
 
 // ---------- Puerto ----------
 
