@@ -24,9 +24,18 @@ const ContactoSchema = new Schema( // Esquema de contacto
 const Contacto = model("Contacto", ContactoSchema);
 
 export class ContactoModel {
-    static async getAll(){
+    static async getAll(userId, isAdmin){
+
         try {
-            return Contacto.find();
+            if(isAdmin){
+                return await Contacto.find({});
+            }
+            return await Contacto.find({
+                $or: [
+                    { propietario: userId },
+                    { esPublico: true, esVisible: true }
+                ]
+            });
         } catch (e) {
             console.log(e);
         }
@@ -48,19 +57,54 @@ export class ContactoModel {
         }
     }
 
-    static async create(contacto){
+    static async create(contacto, propietarioId){
         if(!contacto.success){
             return Error
         }
 
-        const nuevoContacto = {...contacto.data};
+        const nuevoContacto = {...contacto.data, propietario: propietarioId};
 
         const contactoGuardar = new Contacto(nuevoContacto);
 
         try {
             await contactoGuardar.save();
-            return nuevoContacto;
-            //return contactoGuardar.toObject();
+            return contactoGuardar;
+            
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    static async toggleVisible(id){
+        try {
+            const contacto = await Contacto.findById(id);
+            if(!contacto){
+                return null;
+            }
+
+            return await Contacto.findOneAndUpdate(
+                id,
+                {esVisible: !contacto.esVisible},
+                {new: true}
+            )
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    static async togglePublico(id){
+        try {
+            const contacto = await Contacto.findById(id);
+            if(!contacto){
+                return null;
+            }
+            
+            return await Contacto.findOneAndUpdate(
+                id,
+                {esPublico: !contacto.esPublico},
+                {new:true}
+            );
+
         } catch (e) {
             console.log(e);
         }

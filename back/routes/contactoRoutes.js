@@ -7,11 +7,13 @@ export const Enrutador = (modelo) => { // Variable enrutador para mandar el mode
 
     const controlador = new ContactoController(modelo);
 
-    contactoRouter.get('/',controlador.getAll);
-    contactoRouter.get('/:id',controlador.getById);
+    contactoRouter.get('/', controlador.getAll);
+    contactoRouter.get('/:id', controlador.getById);
     contactoRouter.delete('/:id',controlador.delete);
-    contactoRouter.post('/',controlador.create);
-    contactoRouter.put('/:id',controlador.update);
+    contactoRouter.post('/', controlador.create);
+    contactoRouter.put('/:id', controlador.update);
+    contactoRouter.patch('/:id/publico', controlador.togglePublico);
+    contactoRouter.patch('/:id/visible', controlador.toggleVisible);
 
     return contactoRouter;
 }

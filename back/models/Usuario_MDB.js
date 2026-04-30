@@ -63,9 +63,11 @@ export class UsuarioModel{
             const token = crearToken(usuarioEncontrado);
 
             const usuarioFormateado = {
-                nombre:usuarioEncontrado.nombre,
-                mail:usuarioEncontrado.mail,
-                token:token
+                id: usuarioEncontrado._id,
+                nombre: usuarioEncontrado.nombre,
+                mail: usuarioEncontrado.mail,
+                rol: usuarioEncontrado.rol,
+                token: token
             }
             return usuarioFormateado;
 

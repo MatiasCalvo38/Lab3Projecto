@@ -7,7 +7,8 @@ export class ContactoController{
     }
 
     getAll = async(req, res) => {
-        res.json(await this.modelo.getAll());
+        const isAdmin = req.usuario.rol === 'admin';
+        res.json(await this.modelo.getAll(req.usuario.id, isAdmin));
     }
 
     getById = async(req, res) => {
@@ -17,19 +18,24 @@ export class ContactoController{
         if(contacto){
             res.json(contacto);
         }else{
-            res.status(400).end();
+            res.status(404).end();
         }
     }
 
     delete = async(req, res) => {
         const id = req.params.id;
-        const listaContactos = await this.modelo.delete(id);
+        const contacto = await this.modelo.getOneById(id);
 
-        if(listaContactos){
-            res.json(listaContactos);
-        }else{
-            res.status(400).end();
+        if(!contacto){
+            return res.status(404).end();
         }
+
+        if(!contacto.propietario || contacto.propietario.toString() !== req.usuario.id){
+            return res.status(403).json('Sin permiso')
+        }
+
+        await this.modelo.delete(id);
+        res.json({ok:true});
     }
 
     create = async(req, res) => {
@@ -39,15 +45,62 @@ export class ContactoController{
             res.status(400).json('Validacion Incorrecta');
         }
 
-        const nuevoContacto = await this.modelo.create(contacto);
+        const nuevoContacto = await this.modelo.create(contacto, req.usuario.id);
         res.json(nuevoContacto);
     }
 
     update = async(req, res) => {
         const id = req.params.id;
-        const contactoValido = validarParcial(req.body);
+        const contacto = await this.modelo.getOneById(id);
+        if(!contacto){
+            return res.status(404).end()
+        }
 
-        const nuevoContacto = await this.modelo.update(id,contactoValido);
-        res.json(nuevoContacto);
+        if(!contacto.propietario || contacto.propietario.toString() !== req.usuario.id){
+            return res.status(403).json('Sin permiso')
+        }
+        
+        const contactoValido = validarParcial(req.body);
+        const actualizado = await this.modelo.update(id,contactoValido);
+
+        res.json(actualizado);
+    }
+
+    togglePublico = async(req, res) => {
+        const id = req.params.id;
+        const contacto = await this.modelo.getOneById(id);
+
+        if(!contacto){
+            return res.status(404).end()
+        }
+
+        if(!contacto.propietario || contacto.propietario.toString() !== req.usuario.id){
+            return res.status(403).json('Sin permiso')
+        }
+
+        const actualizado = await this.modelo.togglePublico(id);
+        
+        res.json(actualizado);
+    }
+
+    toggleVisible = async(req, res) => {
+        if(req.usuario.rol !== 'admin'){
+            return res.status(403).json('Solo el administrador puede realizar esta accion')
+        }
+
+        const id = req.params.id;
+        const contacto = await this.modelo.getOneById(id);
+
+        if(!contacto){
+            return res.status(404).end()
+        }
+
+        if(!contacto.esPublico){
+            return res.status(400).json('Solo se pueden ocultar contactos publicos')
+        }
+
+        const actualizado = await this.modelo.toggleVisible(id);
+        
+        res.json(actualizado);
     }
 }
