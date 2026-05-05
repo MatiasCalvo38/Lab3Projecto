@@ -44,6 +44,43 @@ export class UsuarioModel{
         }
     }
 
+    static update = async(id, datos) => {
+        try {
+            const actualizacion = {}
+
+            if(datos.nombre){
+                actualizacion.nombre = datos.nombre;
+            }
+
+            if(datos.mail){
+                actualizacion.mail = datos.mail;
+            }
+
+            if(datos.password){
+                actualizacion.password = await bcrypt.hash(datos.password,10);
+            }
+
+            const usuarioActualizado = await Usuario.findByIdAndUpdate(id, actualizacion, {new:true});
+
+            if(!usuarioActualizado){
+                return null;
+            }
+
+            const token = crearToken(usuarioActualizado);
+
+            return{
+                id: usuarioActualizado._id,
+                nombre: usuarioActualizado.nombre,
+                mail: usuarioActualizado.mail,
+                rol: usuarioActualizado.rol,
+                token
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     static login = async(usuario) => {
         let usuarioEncontrado = usuario;
 

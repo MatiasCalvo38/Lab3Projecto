@@ -1,15 +1,15 @@
-import { AuthContext } from './ProveedorContexto.jsx'
 import { useContext,useEffect,useState } from 'react'
+import { AuthContext } from './ProveedorContexto.jsx'
 import { useNavigate } from 'react-router-dom'
 
 export const ResultadoContacto = () => { // Componente para mostrar los contactos del usuario autenticado, con la posibilidad de agregar nuevos contactos a través de un formulario
 
     const [usuarioAuth, setUsuarioAuth] = useContext(AuthContext)
     const navigate = useNavigate()
-    const esAdmin = usuarioAuth.rol === 'admin'
+    const esAdmin = usuarioAuth?.rol === 'admin'
     const [contactosState,setContactosState] = useState([])
-    const [error,setError] = useState(null)
     const [cargando,setCargando] = useState(true)
+    const [error,setError] = useState(null)
     
     useEffect(() => { // Si no hay usuarioAuth todavía, no hacemos nada (esperamos a que el Contexto cargue)
         if (usuarioAuth && usuarioAuth.token) {
@@ -206,7 +206,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
                                                         <div className="d-flex gap-1 flex-wrap">
                                                             <button
                                                                 className="btn btn-outline-primary btn-sm"
-                                                                onClick={() => navigate(`/contactos/editar/${contacto._id}`)}
+                                                                onClick={() => navigate(`/contactos/${contacto._id}`)}
                                                                 title="Editar"
                                                             >
                                                                 Editar
