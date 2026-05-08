@@ -2,7 +2,7 @@ import { useState,useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from './ProveedorContexto.jsx'
 
-export const EditarUsuario = () => {
+export const EditarUsuario = () => { // Componente de editar usuario, se encarga de mostrar el formulario para editar los datos del usuario, si el usuario no esta autenticado redirige al login, si el usuario esta autenticado muestra el formulario con los datos actuales del usuario, al enviar el formulario se hace una peticion al backend para actualizar los datos del usuario, si la peticion es correcta se actualiza el contexto de autenticacion con los nuevos datos del usuario y se muestra un mensaje de exito, si la peticion es incorrecta se muestra un mensaje de error
 
     const [usuarioAuth,setUsuarioAuth] = useContext(AuthContext);
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ export const EditarUsuario = () => {
         return null;
     }
 
-    const recogerForm = (e) => {
+    const recogerForm = (e) => { // Funcion para recoger los datos del formulario, se encarga de evitar el comportamiento por defecto del formulario, recoger los datos del formulario y llamar a la funcion de actualizar usuario con los datos recogidos del formulario
         e.preventDefault();
         setError(null);
 
@@ -30,7 +30,7 @@ export const EditarUsuario = () => {
         actualizarUsuario(datos);
     }
 
-    const actualizarUsuario = async(datos) => {
+    const actualizarUsuario = async(datos) => { // Funcion para actualizar los datos del usuario, se encarga de hacer una peticion al backend para actualizar los datos del usuario, si la peticion es correcta se actualiza el contexto de autenticacion con los nuevos datos del usuario y se muestra un mensaje de exito, si la peticion es incorrecta se muestra un mensaje de error
         try {
             const peticion = await fetch(`http://localhost:1234/usuarios/${usuarioAuth.id}`,{
                 method: 'PUT',
@@ -60,7 +60,7 @@ export const EditarUsuario = () => {
         }
     }
 
-  return (
+  return ( // Renderizamos el formulario para editar los datos del usuario, el formulario tiene los datos actuales del usuario como valores por defecto, al enviar el formulario se llama a la funcion de recogerForm para recoger los datos del formulario y actualizar los datos del usuario, si hay un error se muestra un mensaje de error, si la actualizacion es exitosa se muestra un mensaje de exito
     <div className="py-5 d-flex justify-content-center">
             <div className="card shadow" style={{ width: '400px' }}>
                 <div className="card-body p-4">

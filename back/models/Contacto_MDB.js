@@ -1,7 +1,7 @@
 import mongoose, {model, Schema} from "mongoose";
 import { conexion } from "../helpers/conexion.js";
 
-conexion();
+conexion(); // Conecta a la base de datos
 
 const ContactoSchema = new Schema( // Esquema de contacto
     {
@@ -21,11 +21,10 @@ const ContactoSchema = new Schema( // Esquema de contacto
     },
 );
 
-const Contacto = model("Contacto", ContactoSchema);
+const Contacto = model("Contacto", ContactoSchema); // Modelo de contacto, se encarga de interactuar con la base de datos, tiene metodos estaticos para realizar las operaciones CRUD sobre los contactos, cada metodo recibe los parametros necesarios para realizar la operacion y devuelve el resultado de la operacion o un error si la operacion falla
 
-export class ContactoModel {
-    static async getAll(userId, isAdmin){
-
+export class ContactoModel { // Modelo de contacto, se encarga de interactuar con la base de datos, tiene metodos estaticos para realizar las operaciones CRUD sobre los contactos, cada metodo recibe los parametros necesarios para realizar la operacion y devuelve el resultado de la operacion o un error si la operacion falla
+    static async getAll(userId, isAdmin){ // Devuelve todos los contactos del usuario, si el usuario es admin devuelve todos los contactos de todos los usuarios, si el usuario no es admin devuelve solo los contactos que son publicos o que son propiedad del usuario, cada contacto devuelto debe ser visible
         try {
             if(isAdmin){
                 return await Contacto.find({});
@@ -41,7 +40,7 @@ export class ContactoModel {
         }
     }
 
-    static async getOneById(id){
+    static async getOneById(id){ // Devuelve un contacto por su id, solo si el contacto es publico o el usuario es el propietario del contacto o el usuario es admin, el contacto devuelto debe ser visible
         try {
             return await Contacto.findById(id);
         } catch (e) {
@@ -49,15 +48,15 @@ export class ContactoModel {
         }
     }
 
-    static async delete(id){
+    static async delete(id){ // Elimina un contacto por su id, solo si el usuario es el propietario del contacto o el usuario es admin12121212
         try {
-            return await Contacto.deleteOne({_id:id})
+            return await Contacto.deleteOne({_id:id});
         } catch (e) {
             console.log(e);
         }
     }
 
-    static async create(contacto, propietarioId){
+    static async create(contacto, propietarioId){ // Crea un nuevo contacto, el contacto debe ser valido segun el esquema definido en helpers/zod.js, el contacto creado sera propiedad del usuario que lo creo
         if(!contacto.success){
             return Error
         }
@@ -75,7 +74,7 @@ export class ContactoModel {
         }
     }
 
-    static async toggleVisible(id){
+    static async toggleVisible(id){ // Cambia el estado de visible de un contacto por su id, solo si el usuario es el propietario del contacto, el contacto actualizado debe ser valido segun el esquema definido en helpers/zod.js
         try {
             const contacto = await Contacto.findById(id);
             if(!contacto){
@@ -92,7 +91,7 @@ export class ContactoModel {
         }
     }
 
-    static async togglePublico(id){
+    static async togglePublico(id){ // Cambia el estado de publico de un contacto por su id, solo si el usuario es el propietario del contacto, el contacto debe existir
         try {
             const contacto = await Contacto.findById(id);
             if(!contacto){
@@ -110,13 +109,14 @@ export class ContactoModel {
         }
     }
 
-    static async update(id, validacion){
+    static async update(id, validacion){ // Actualiza un contacto por su id, solo si el usuario es el propietario del contacto, el contacto actualizado debe ser valido segun el esquema definido en helpers/zod.js
         if(!validacion.success){
             res.status(400).json("Error en la validacion");
         }
 
         try {
             return await Contacto.findOneAndUpdate({_id:id},{...validacion.data},{new:true});
+            
         } catch (e){
             console.log(e);
         }

@@ -1,8 +1,8 @@
-import {use, useContext,useEffect,useState} from 'react'
+import { useContext,useEffect,useState} from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from './ProveedorContexto.jsx';
 
-const formularioVacio = {
+const formularioVacio = { // Formulario vacio para inicializar el estado del formulario, se utiliza tanto para el formulario de creacion como para el formulario de edicion, en el caso de edicion se reemplaza por los datos del contacto a editar
     nombre: "",
     apellido: "",
     email: "",
@@ -11,7 +11,7 @@ const formularioVacio = {
     telefonos: ""
 }
 
-export const FormularioContacto = () => {
+export const FormularioContacto = () => { // Componente de formulario de contacto, se encarga de mostrar el formulario para crear o editar un contacto, si el usuario no esta autenticado redirige al login, si el usuario esta autenticado muestra el formulario con los datos del contacto a editar o con el formulario vacio para crear un nuevo contacto, al enviar el formulario se hace una peticion al backend para crear o actualizar el contacto, si la peticion es correcta se redirige a la pagina de contactos, si la peticion es incorrecta se muestra un mensaje de error
     const [usuarioAuth] = useContext(AuthContext);
     const navigate = useNavigate();
     const {id} = useParams();
@@ -34,7 +34,7 @@ export const FormularioContacto = () => {
         }
     },[esEdicion, usuarioAuth])
 
-    const cargarContacto = async() => {
+    const cargarContacto = async() => { // Funcion para cargar los datos del contacto a editar, se encarga de hacer una peticion al backend para obtener los datos del contacto, si la peticion es correcta se actualiza el estado del formulario con los datos del contacto, si la peticion es incorrecta se muestra un mensaje de error
         try {
             const peticion = await fetch(`http://localhost:1234/contactos/${id}`,{
                 headers: {'Authorization': usuarioAuth.token}
@@ -47,6 +47,7 @@ export const FormularioContacto = () => {
             }
 
             const datos = await peticion.json();
+
             setFormulario({
                 nombre: datos.nombre || "",
                 apellido: datos.apellido || "",
@@ -55,6 +56,7 @@ export const FormularioContacto = () => {
                 domicilio: datos.domicilio || "",
                 telefonos: datos.telefonos?.join(", ") || ""
             })
+
             setCargando(false);
 
         } catch (e) {
@@ -64,14 +66,11 @@ export const FormularioContacto = () => {
         }
     }
 
-    const handleChange = (e) => {
-        setFormulario({
-            ...formulario,
-            [e.target.name]: e.target.value
-        })
+    const handleChange = (e) => { // Funcion para manejar el cambio en los campos del formulario, se encarga de actualizar el estado del formulario con los nuevos valores ingresados por el usuario, cada vez que el usuario ingresa un valor en un campo del formulario se llama a esta funcion para actualizar el estado del formulario, el estado del formulario se utiliza para mostrar los valores actuales en los campos del formulario y para enviar los datos al backend al momento de guardar el contacto
+        setFormulario({...formulario, [e.target.name]: e.target.value});
     }
 
-    const buildBody = () => {
+    const buildBody = () => { // Funcion para construir el cuerpo de la peticion al backend, se encarga de tomar los datos del formulario y construir un objeto con los datos necesarios para crear o actualizar un contacto, el objeto construido se utiliza como cuerpo de la peticion al backend al momento de guardar el contacto, esta funcion se encarga de transformar los datos del formulario en el formato esperado por el backend, por ejemplo, convierte el campo de telefonos que es una cadena de texto separada por comas en un array de strings, tambien se encarga de eliminar los campos vacios para no enviar datos innecesarios al backend
         const body = {
             nombre: formulario.nombre,
             apellido: formulario.apellido,
@@ -93,7 +92,7 @@ export const FormularioContacto = () => {
         return body;
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async(e) => { // Funcion para manejar el submit del formulario, se encarga de evitar el comportamiento por defecto del formulario, construir el cuerpo de la peticion al backend con los datos del formulario, hacer una peticion al backend para crear o actualizar el contacto, si la peticion es correcta se redirige a la pagina de contactos, si la peticion es incorrecta se muestra un mensaje de error
         e.preventDefault();
         setErrorFormulario(null);
         setGuardando(true);
@@ -115,7 +114,7 @@ export const FormularioContacto = () => {
             })
 
             if(!peticion.ok){
-                setErrorFormulario("Error al guardar contacto");
+                setErrorFormulario("Error al guardar el contacto");
                 setGuardando(false);
                 return;
             }
@@ -129,11 +128,11 @@ export const FormularioContacto = () => {
         }
     }
 
-    if(usuarioAuth === null){
+    if(usuarioAuth === null){ // Si el usuario no esta autenticado, redirigimos al login, esto es una medida de seguridad para evitar que un usuario no autenticado pueda acceder a la pagina de creacion o edicion de contactos, aunque el componente de formulario de contacto ya se encarga de redirigir al login si el usuario no esta autenticado, esta verificacion adicional es para asegurarnos de que en caso de que el componente se renderice antes de que el efecto de redireccionamiento se ejecute, no se muestre el formulario a un usuario no autenticado, en resumen, esta verificacion es una medida de seguridad adicional para evitar que un usuario no autenticado pueda acceder al formulario de contacto
         return null;
     }
 
-  return (
+  return ( // Renderizamos el formulario para crear o editar un contacto, si el usuario no esta autenticado redirigimos al login, si el usuario esta autenticado mostramos el formulario con los datos del contacto a editar o con el formulario vacio para crear un nuevo contacto, al enviar el formulario se hace una peticion al backend para crear o actualizar el contacto, si la peticion es correcta se redirige a la pagina de contactos, si la peticion es incorrecta se muestra un mensaje de error
     <div className="container mt-4">
         <div className="row justify-content-center">
             <div className="col-md-8">

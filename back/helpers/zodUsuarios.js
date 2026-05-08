@@ -2,7 +2,7 @@
 
 import zod from "zod";
 
-const usuariosSchema = zod.object(
+const usuariosSchema = zod.object( // Esquema de usuario
     {
         //id:zod.number().min(1),
         nombre:zod.string().min(1),
@@ -12,10 +12,10 @@ const usuariosSchema = zod.object(
     }
 );
 
-export const validarUsuario = (usuario) => {
+export const validarUsuario = (usuario) => { // Valida un usuario segun el esquema definido, devuelve un objeto con la propiedad error si la validacion falla, o la propiedad data con el usuario validado si la validacion es exitosa
     return usuariosSchema.safeParse(usuario);
 }
 
-export const validarUsuarioParcial = (usuario) => {
+export const validarUsuarioParcial = (usuario) => { // Valida un usuario segun el esquema definido, pero permite que falten propiedades, devuelve un objeto con la propiedad error si la validacion falla, o la propiedad data con el usuario validado si la validacion es exitosa
     return usuariosSchema.partial().safeParse(usuario);
 }

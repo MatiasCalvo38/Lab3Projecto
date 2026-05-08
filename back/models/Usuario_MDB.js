@@ -3,13 +3,13 @@ import {conexion} from '../helpers/conexion.js';
 import bcrypt from 'bcrypt';
 import { crearToken } from "../helpers/jwt_usuarios.js";
 
-conexion();
+conexion(); // Conecta a la base de datos
 
 const usuarioSchema = new Schema( // Esquema de usuario
     {
-        nombre:String,
-        password:String,
-        mail:String,
+        nombre: String,
+        password: String,
+        mail: String,
         rol: {type: String, enum:["admin","usuario"], default:"usuario"}
     },
     {
@@ -17,10 +17,10 @@ const usuarioSchema = new Schema( // Esquema de usuario
     }
 );
 
-const Usuario = model('Usuario',usuarioSchema)
+const Usuario = model('Usuario',usuarioSchema) // Modelo de usuario, se encarga de interactuar con la base de datos, tiene metodos estaticos para realizar las operaciones CRUD sobre los usuarios, cada metodo recibe los parametros necesarios para realizar la operacion y devuelve el resultado de la operacion o un error si la operacion falla
 
-export class UsuarioModel{
-    static register = async(usuario) => {
+export class UsuarioModel{ // Modelo de usuario, se encarga de interactuar con la base de datos, tiene metodos estaticos para realizar las operaciones CRUD sobre los usuarios, cada metodo recibe los parametros necesarios para realizar la operacion y devuelve el resultado de la operacion o un error si la operacion falla
+    static register = async(usuario) => { // Registra un nuevo usuario, el usuario debe ser valido segun el esquema definido en helpers/zod.js, el usuario registrado no puede tener el mismo email que otro usuario registrado
         if(!usuario.success){
             return Error();
         }
@@ -44,7 +44,7 @@ export class UsuarioModel{
         }
     }
 
-    static update = async(id, datos) => {
+    static update = async(id, datos) => { // Actualiza un usuario por su id, solo si el usuario es el propietario o el usuario es admin
         try {
             const actualizacion = {}
 
@@ -81,17 +81,17 @@ export class UsuarioModel{
         }
     }
 
-    static login = async(usuario) => {
+    static login = async(usuario) => { // Autentica a un usuario, el usuario debe ser valido segun el esquema definido en helpers/zod.js, si la autenticacion es exitosa se devuelve un objeto con la informacion del usuario y un token JWT, si la autenticacion falla se devuelve un error
         let usuarioEncontrado = usuario;
 
         try {
-            usuarioEncontrado = await Usuario.findOne({nombre:usuarioEncontrado.nombre});
+            usuarioEncontrado = await Usuario.findOne({nombre: usuarioEncontrado.nombre});
 
             if(!usuarioEncontrado){
                 return "Usuario no existe";
             }
 
-            const pwd = await bcrypt.compare(usuario.password,usuarioEncontrado.password);
+            const pwd = await bcrypt.compare(usuario.password, usuarioEncontrado.password);
 
             if(!pwd){
                 return "Fallo autentificacion";

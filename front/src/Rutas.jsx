@@ -7,7 +7,7 @@ import { FormularioContacto } from "./FormularioContacto.jsx"
 import { Navbar } from "./Navbar.jsx"
 import { EditarUsuario } from "./EditarUsuario.jsx"
 
-export const Rutas = () => {
+export const Rutas = () => { 
   return (
     <BrowserRouter>
       <ProveedorContexto>
@@ -19,7 +19,7 @@ export const Rutas = () => {
             <Route path="*" element={<h1>Error 404: No encontrado</h1>} />
             <Route path="/contactos" element={<Contactos />} />
             <Route path="/contactos/nuevo" element={<FormularioContacto />} />
-            <Route path="/contactos/:id" element={<FormularioContacto />} />
+            <Route path="/contactos/editar/:id" element={<FormularioContacto />} />
             <Route path="/usuario/editar" element={<EditarUsuario />} />
           </Routes>
       </ProveedorContexto>

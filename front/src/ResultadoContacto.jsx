@@ -31,9 +31,9 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
 
             if(!peticion.ok) { // Si la respuesta no es 200, intentamos leer el mensaje de error del servidor
                 const errorData = await peticion.json().catch(() => ({})); // Intenta leer el mensaje del server
-                setError(`Error ${peticion.status}: al cargar los contactos`);
+                setError('Error al cargar los contactos');
                 setCargando(false);
-            return;
+                return;
             }
 
             const datos = await peticion.json() // Si la respuesta es 200, leemos los datos y los guardamos en el estado
@@ -47,7 +47,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const handleEliminar = async (id) => {
+    const handleEliminar = async (id) => { // Función para eliminar un contacto, se encarga de hacer una petición al backend para eliminar el contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
         if (!window.confirm('¿Eliminar este contacto?')){
             return
         }
@@ -71,7 +71,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const handleTogglePublico = async (id) => {
+    const handleTogglePublico = async (id) => { // Función para cambiar el estado de publico de un contacto, se encarga de hacer una petición al backend para cambiar el estado de publico del contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
         try {
             const peticion = await fetch(`http://localhost:1234/contactos/${id}/publico`, {
                 method: 'PATCH',
@@ -91,7 +91,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const handleToggleVisible = async (id) => {
+    const handleToggleVisible = async (id) => { // Función para cambiar el estado de visible de un contacto, se encarga de hacer una petición al backend para cambiar el estado de visible del contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
         try {
             const peticion = await fetch(`http://localhost:1234/contactos/${id}/visible`, {
                 method: 'PATCH',
@@ -111,7 +111,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const esMio = (contacto) => contacto.propietario && contacto.propietario.toString() === usuarioAuth.id?.toString()
+    const esMio = (contacto) => contacto.propietario && contacto.propietario.toString() === usuarioAuth.id?.toString() // Función para verificar si un contacto pertenece al usuario autenticado, se encarga de comparar el id del propietario del contacto con el id del usuario autenticado, esta función se utiliza para mostrar u ocultar ciertas acciones en la interfaz dependiendo de si el contacto pertenece al usuario o no
 
   return ( // Renderizado del componente, mostrando un spinner de carga mientras se cargan los contactos, un mensaje de error si hay un error, y la lista de contactos junto con el formulario para agregar nuevos contactos si no hay errores ni estamos cargando
     <div className="container mt-4">
@@ -206,7 +206,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
                                                         <div className="d-flex gap-1 flex-wrap">
                                                             <button
                                                                 className="btn btn-outline-primary btn-sm"
-                                                                onClick={() => navigate(`/contactos/${contacto._id}`)}
+                                                                onClick={() => navigate(`/contactos/editar/${contacto._id}`)}
                                                                 title="Editar"
                                                             >
                                                                 Editar
