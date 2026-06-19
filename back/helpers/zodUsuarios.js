@@ -5,7 +5,7 @@ import zod from "zod";
 const usuariosSchema = zod.object( // Esquema de usuario
     {
         //id:zod.number().min(1),
-        nombre:zod.string().min(1),
+        nick:zod.string().min(1),
         password:zod.string(1).min(1),
         mail:zod.string().min(1),
         rol: zod.enum(["admin","usuario"]).optional()

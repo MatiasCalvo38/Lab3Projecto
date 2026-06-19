@@ -19,7 +19,7 @@ export class Usuario{
             ...usuario.data,
         }
 
-        if(listaUsuarios.find(usuario => usuario.nombre === nuevoUsuario.nombre) || listaUsuarios.find(usuario => usuario.password === nuevoUsuario.password)){
+        if(listaUsuarios.find(usuario => usuario.nick === nuevoUsuario.nick) || listaUsuarios.find(usuario => usuario.password === nuevoUsuario.password)){
             return "Usuario duplicado";
         }
 
@@ -32,7 +32,7 @@ export class Usuario{
     static login = async(usuario) => {
         let usuarioRecibido = usuario;
 
-        let usuarioRegistrado = listaUsuarios.find(usuario => usuario.nombre === usuarioRecibido.nombre);
+        let usuarioRegistrado = listaUsuarios.find(usuario => usuario.nick === usuarioRecibido.nick);
 
         if(!usuarioRegistrado){
             return "Usuario no encontrado";
@@ -47,7 +47,7 @@ export class Usuario{
         const token = crearToken(usuarioRegistrado);
 
         const usuarioFormateado = {
-            nombre:usuarioRecibido.nombre,
+            nick:usuarioRecibido.nick,
             mail:usuarioRecibido.mail,
             token:token
         }

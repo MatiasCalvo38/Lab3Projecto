@@ -81,7 +81,7 @@ export class ContactoModel { // Modelo de contacto, se encarga de interactuar co
                 return null;
             }
 
-            return await Contacto.findOneAndUpdate(
+            return await Contacto.findByIdAndUpdate( // Cambia el estado de visible de un contacto por su id, solo si el usuario es el propietario del contacto, el contacto actualizado debe ser valido segun el esquema definido en helpers/zod.js
                 id,
                 {esVisible: !contacto.esVisible},
                 {new: true}
@@ -98,7 +98,7 @@ export class ContactoModel { // Modelo de contacto, se encarga de interactuar co
                 return null;
             }
             
-            return await Contacto.findOneAndUpdate(
+            return await Contacto.findByIdAndUpdate( // Cambia el estado de publico de un contacto por su id, solo si el usuario es el propietario del contacto, el contacto debe existir
                 id,
                 {esPublico: !contacto.esPublico},
                 {new:true}
@@ -115,7 +115,7 @@ export class ContactoModel { // Modelo de contacto, se encarga de interactuar co
         }
 
         try {
-            return await Contacto.findOneAndUpdate({_id:id},{...validacion.data},{new:true});
+            return await Contacto.findOneAndUpdate({_id:id},{...validacion.data},{new:true}); // Actualiza un contacto por su id, solo si el usuario es el propietario del contacto, el contacto actualizado debe ser valido segun el esquema definido en helpers/zod.js
             
         } catch (e){
             console.log(e);

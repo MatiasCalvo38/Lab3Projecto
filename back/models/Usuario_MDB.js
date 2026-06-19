@@ -7,7 +7,7 @@ conexion(); // Conecta a la base de datos
 
 const usuarioSchema = new Schema( // Esquema de usuario
     {
-        nombre: String,
+        nick: String,
         password: String,
         mail: String,
         rol: {type: String, enum:["admin","usuario"], default:"usuario"}
@@ -27,7 +27,7 @@ export class UsuarioModel{ // Modelo de usuario, se encarga de interactuar con l
 
         const nuevoUsuario = {...usuario.data};
 
-        const usuarioExiste = await Usuario.findOne({$or:[{nombre:nuevoUsuario.nombre},{mail:nuevoUsuario.mail}]});
+        const usuarioExiste = await Usuario.findOne({$or:[{nick:nuevoUsuario.nick},{mail:nuevoUsuario.mail}]});
 
         if(usuarioExiste){
             return "Usuario duplicado";
@@ -48,8 +48,8 @@ export class UsuarioModel{ // Modelo de usuario, se encarga de interactuar con l
         try {
             const actualizacion = {}
 
-            if(datos.nombre){
-                actualizacion.nombre = datos.nombre;
+            if(datos.nick){
+                actualizacion.nick = datos.nick;
             }
 
             if(datos.mail){
@@ -70,7 +70,7 @@ export class UsuarioModel{ // Modelo de usuario, se encarga de interactuar con l
 
             return{
                 id: usuarioActualizado._id,
-                nombre: usuarioActualizado.nombre,
+                nick: usuarioActualizado.nick,
                 mail: usuarioActualizado.mail,
                 rol: usuarioActualizado.rol,
                 token
@@ -85,7 +85,7 @@ export class UsuarioModel{ // Modelo de usuario, se encarga de interactuar con l
         let usuarioEncontrado = usuario;
 
         try {
-            usuarioEncontrado = await Usuario.findOne({nombre: usuarioEncontrado.nombre});
+            usuarioEncontrado = await Usuario.findOne({nick: usuarioEncontrado.nick});
 
             if(!usuarioEncontrado){
                 return "Usuario no existe";
@@ -101,7 +101,7 @@ export class UsuarioModel{ // Modelo de usuario, se encarga de interactuar con l
 
             const usuarioFormateado = {
                 id: usuarioEncontrado._id,
-                nombre: usuarioEncontrado.nombre,
+                nick: usuarioEncontrado.nick,
                 mail: usuarioEncontrado.mail,
                 rol: usuarioEncontrado.rol,
                 token: token

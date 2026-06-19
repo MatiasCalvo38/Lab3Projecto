@@ -19,7 +19,7 @@ export const EditarUsuario = () => { // Componente de editar usuario, se encarga
         setError(null);
 
         const datos = {
-            nombre: e.target.nombre.value,
+            nick: e.target.nick.value,
             mail: e.target.mail.value,
         }
 
@@ -67,13 +67,13 @@ export const EditarUsuario = () => { // Componente de editar usuario, se encarga
                     <h2 className="card-title text-center mb-4">Editar Perfil</h2>
                     <form onSubmit={recogerForm}>
                         <div className="mb-3">
-                            <label htmlFor="nombre" className="form-label">Usuario</label>
+                            <label htmlFor="nick" className="form-label">Usuario</label>
                             <input
                                 type="text"
                                 className="form-control"
-                                id="nombre"
-                                name="nombre"
-                                defaultValue={usuarioAuth.nombre}
+                                id="nick"
+                                name="nick"
+                                defaultValue={usuarioAuth.nick}
                                 required
                             />
                         </div>

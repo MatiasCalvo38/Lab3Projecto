@@ -13,7 +13,7 @@ export const Registro = () => {
         e.preventDefault()
 
         const usuario = {
-            nombre:e.target.usuario.value,
+            nick:e.target.usuario.value,
             mail:e.target.mail.value,
             password:e.target.password.value
         }
