@@ -19,10 +19,10 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
 
     const resultados = async () => { // Función para cargar los contactos desde el servidor
         try { // Hacemos la petición al backend para obtener los contactos, incluyendo el token de autenticación en los headers
-            const peticion=await fetch('http://localhost:1234/contactos',
+            const peticion = await fetch('http://localhost:1234/contactos',
                 {
-                    method:'GET',
-                    headers:{
+                    method: 'GET',
+                    headers: {
                         'Content-Type':'application/json',
                         'Authorization':`Bearer ${usuarioAuth.token}`
                     }
@@ -37,9 +37,10 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
             }
 
             const datos = await peticion.json() // Si la respuesta es 200, leemos los datos y los guardamos en el estado
+            const datosOrdenados = [...datos].sort((a, b) => a.apellido.localeCompare(b.apellido, 'es', {sensitivity: 'base'})) // Ordenamos los contactos por apellido, ignorando mayúsculas y minúsculas
 
-            setContactosState(datos)
-            setCargando(false)
+            setContactosState(datosOrdenados) // Guardamos los contactos ordenados en el estado
+            setCargando(false) // Indicamos que ya no estamos cargando
            
         } catch (e) { // Si hay un error de conexión u otro tipo de error, lo capturamos aquí
             setError("Error de conexion con el servidor") // Si hay un error, reseteamos el formulario
@@ -47,7 +48,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const handleEliminar = async (id) => { // Función para eliminar un contacto, se encarga de hacer una petición al backend para eliminar el contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
+    const handleEliminar = async (id) => { // Función que se encarga de hacer una petición al backend para eliminar el contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
         if (!window.confirm('¿Eliminar este contacto?')){
             return
         }
@@ -71,7 +72,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const handleTogglePublico = async (id) => { // Función para cambiar el estado de publico de un contacto, se encarga de hacer una petición al backend para cambiar el estado de publico del contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
+    const handleTogglePublico = async (id) => { // Función que se encarga de hacer una petición al backend para cambiar el estado de publico del contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
         try {
             const peticion = await fetch(`http://localhost:1234/contactos/${id}/publico`, {
                 method: 'PATCH',
@@ -91,7 +92,7 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
         }
     }
 
-    const handleToggleVisible = async (id) => { // Función para cambiar el estado de visible de un contacto, se encarga de hacer una petición al backend para cambiar el estado de visible del contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
+    const handleToggleVisible = async (id) => { // Función que se encarga de hacer una petición al backend para cambiar el estado de visible del contacto, si la petición es correcta se recargan los contactos, si la petición es incorrecta se muestra un mensaje de error
         try {
             const peticion = await fetch(`http://localhost:1234/contactos/${id}/visible`, {
                 method: 'PATCH',
@@ -237,6 +238,6 @@ export const ResultadoContacto = () => { // Componente para mostrar los contacto
                     )}
                 </>
             )}
-        </div>
+    </div>
   )
 }

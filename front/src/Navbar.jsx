@@ -7,13 +7,13 @@ export const Navbar = () => {
     const [usuarioAuth, setUsuarioAuth] = useContext(AuthContext)
     const navigate = useNavigate()
 
-    const cerrarSesion = () => {
+    const cerrarSesion = () => { // Elimina el usuario del localStorage y del contexto de autenticacion y redirige al login
         localStorage.removeItem("usuario")
         setUsuarioAuth(null)
         navigate("/login")
     }
 
-  return (
+  return ( // Barra de navegacion, si el usuario esta autenticado muestra su nombre y un boton para cerrar sesion, si no esta autenticado muestra los botones de registro e ingreso
     <nav className="navbar navbar-dark bg-primary">
         <div className="container-fluid px-3">
             {usuarioAuth ? (

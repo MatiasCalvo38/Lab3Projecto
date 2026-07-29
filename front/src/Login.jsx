@@ -9,7 +9,7 @@ export const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const recogerForm = (e) => {
+  const recogerForm = (e) => { // Recoge los datos del formulario y los guarda en el estado formulario, luego llama a la funcion buscar para enviar los datos al servidor
     e.preventDefault();
 
     const usuario = {
@@ -20,7 +20,7 @@ export const Login = () => {
     buscar(usuario);
   };
 
-  const buscar = async (usuario) => {
+  const buscar = async (usuario) => { // Envia los datos del formulario al servidor para verificar si el usuario existe y la contraseña es correcta, si es correcto guarda el usuario en el localStorage y en el contexto de autenticacion y redirige a la pagina de contactos, si no es correcto muestra un mensaje de error
     try {
       const peticion = await fetch("http://localhost:1234/usuarios/login", {
         method: "POST",
@@ -48,7 +48,7 @@ export const Login = () => {
     }
   };
 
-  return (
+  return ( // Formulario de login, si el usuario esta autenticado redirige a la pagina de contactos, si no esta autenticado muestra el formulario de login
     <div className="py-5 d-flex justify-content-center">
       <div className="card shadow" style={{ width: '400px' }}>
         <div className="card-body p-4">

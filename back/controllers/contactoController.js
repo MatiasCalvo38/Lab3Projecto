@@ -8,6 +8,7 @@ export class ContactoController{ // Controlador de contactos, se encarga de mane
 
     getAll = async(req, res) => { // Devuelve todos los contactos del usuario, si el usuario es admin devuelve todos los contactos de todos los usuarios
         const isAdmin = req.usuario.rol === 'admin';
+        
         res.json(await this.modelo.getAll(req.usuario.id, isAdmin));
     }
 
@@ -22,7 +23,7 @@ export class ContactoController{ // Controlador de contactos, se encarga de mane
         }
     }
 
-    delete = async(req, res) => { // Elimina un contacto por su id, solo si el usuario es el propietario del contacto o el usuario es admin
+    delete = async(req, res) => { // Elimina un contacto por su id, solo si el usuario es el propietario del contacto
         const id = req.params.id;
         const contacto = await this.modelo.getOneById(id);
 
@@ -35,6 +36,7 @@ export class ContactoController{ // Controlador de contactos, se encarga de mane
         }
 
         await this.modelo.delete(id);
+
         res.json({ok:true});
     }
 
@@ -46,12 +48,14 @@ export class ContactoController{ // Controlador de contactos, se encarga de mane
         }
 
         const nuevoContacto = await this.modelo.create(contacto, req.usuario.id);
+
         res.json(nuevoContacto);
     }
 
     update = async(req, res) => { // Actualiza un contacto por su id, solo si el usuario es el propietario del contacto, el contacto actualizado debe ser valido segun el esquema definido en helpers/zod.js
         const id = req.params.id;
         const contacto = await this.modelo.getOneById(id);
+
         if(!contacto){
             return res.status(404).end()
         }
